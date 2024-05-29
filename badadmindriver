@@ -1,0 +1,23 @@
+#include <Windows.h>
+#include <tchar.h>
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+    SC_HANDLE scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    SC_HANDLE service = OpenService(scm, _T("WinDefend"), SERVICE_ALL_ACCESS);
+
+    if (service != NULL)
+    {
+        SERVICE_STATUS serviceStatus;
+        ControlService(service, SERVICE_CONTROL_STOP, &serviceStatus);
+        
+        CloseServiceHandle(service);
+        CloseServiceHandle(scm);
+
+        return 0;
+    }
+    
+    CloseServiceHandle(scm);
+
+    return 1;
+}
